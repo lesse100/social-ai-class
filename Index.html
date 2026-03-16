@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI 사회 수업 PPT 생성 플랫폼 · 채소 만화판</title>
+<style>
+:root{
+  --bg:#f7fbff;
+  --bg2:#eef6ff;
+  --card:#ffffff;
+  --line:#d9e5f6;
+  --text:#24324a;
+  --sub:#5f6f86;
+  --brand:#2563eb;
+  --brand2:#7c3aed;
+  --green:#22c55e;
+  --yellow:#fde68a;
+  --orange:#fb923c;
+  --shadow:0 16px 40px rgba(37,99,235,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",Arial,sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,var(--bg),var(--bg2));
+}
+header{
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:white;
+  padding:30px 20px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+header h1{margin:0 0 8px;font-size:clamp(26px,4vw,40px)}
+header p{margin:0;opacity:.95}
+.container{max-width:1280px;margin:0 auto;padding:22px}
+.panel{
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+}
+.controls{
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1fr auto;
+  gap:12px;
+  align-items:end;
+}
+label{display:block;font-weight:800;margin-bottom:8px}
+select,input{
+  width:100%;
+  padding:13px 14px;
+  border-radius:14px;
+  border:1px solid #cbd8ef;
+  font-size:16px;
+  background:white;
+}
+button{
+  border:none;
+  border-radius:14px;
+  padding:13px 16px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .15s ease;
+}
+button:hover{transform:translateY(-1px)}
+.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:white}
+.secondary{background:#eaf1ff;color:#173b8f}
+.ghost{background:white;border:1px solid #cbd8ef;color:#334155}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.helper{color:var(--sub);font-size:14px;margin:10px 2px 0}
+.layout{
+  display:grid;
+  grid-template-columns:1.35fr .65fr;
+  gap:18px;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-bottom:14px;
+}
+.meta{display:flex;gap:10px;flex-wrap:wrap}
+.badge{
+  background:#eef4ff;
+  color:#173b8f;
+  border:1px solid #d5e3ff;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:14px;
+  font-weight:800;
+}
+.progress-bar{
+  height:12px;
+  background:#e6eefc;
+  border-radius:999px;
+  overflow:hidden;
+  border:1px solid #d6e2f7;
+  margin-bottom:16px;
+}
+.progress{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#2563eb,#7c3aed,#22c55e);
+  transition:width .25s ease;
+}
+.slide-stage{min-height:650px}
+.slide{
+  min-height:650px;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(124,58,237,.10), transparent 26%),
+    radial-gradient(circle at 10% 90%, rgba(34,197,94,.10), transparent 26%),
+    white;
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:34px;
+  position:relative;
+  overflow:hidden;
+}
+.slide:before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:8px;
+  background:linear-gradient(90deg,#2563eb,#7c3aed,#22c55e,#fb923c);
+}
+.kicker{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:999px;
+  background:#eef4ff;
+  border:1px solid #d5e3ff;
+  color:#17408f;
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:12px;
+}
+.slide h2{font-size:clamp(30px,4.5vw,46px);margin:6px 0 12px;color:#14306b}
+.slide h3{font-size:clamp(24px,3.8vw,36px);margin:6px 0 16px;color:#17356f}
+.slide p,.slide li{font-size:clamp(19px,2.2vw,27px);line-height:1.68}
+.lead{font-size:clamp(21px,2.7vw,30px);color:#334155}
+ul{margin:10px 0 0 18px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{
+  background:linear-gradient(180deg,#ffffff,#f8fbff);
+  border:1px solid #dce6fb;
+  border-radius:22px;
+  padding:18px;
+}
+.card h4{margin:0 0 8px;font-size:20px;color:#16326b}
+.card p{margin:0}
+.highlight{
+  background:linear-gradient(180deg,#fffef2,#fff8cf);
+  border:1px solid #f2e195;
+  border-radius:18px;
+  padding:16px;
+}
+.newsbox{display:grid;gap:14px}
+.newshead{
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#eef5ff,#f8fbff);
+  border:1px solid #d6e4ff;
+}
+.newshead h4{margin:0 0 8px;font-size:22px;color:#12306a}
+.connection{
+  padding:16px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#f4f0ff,#fbf9ff);
+  border:1px solid #e3dcff;
+}
+.comic-header{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.comic-header .tag{
+  padding:8px 12px;
+  border-radius:999px;
+  background:#ecfdf5;
+  border:1px solid #bbf7d0;
+  color:#166534;
+  font-weight:800;
+  font-size:14px;
+}
+.comic{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+.panel-cut{
+  border-radius:24px;
+  padding:14px;
+  border:2px solid #f0d87b;
+  background:linear-gradient(180deg,#fffdf0,#fff7ca);
+  min-height:390px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:0 12px 28px rgba(0,0,0,.05);
+}
+.panel-label{
+  font-size:15px;
+  font-weight:800;
+  color:#7a5a0f;
+  margin-bottom:8px;
+}
+.scene{
+  height:230px;
+  border-radius:20px;
+  border:1px solid #d7e6ff;
+  background:linear-gradient(180deg,#dbeafe 0%, #eff6ff 52%, #c9f5d0 52%, #dcfce7 100%);
+  position:relative;
+  overflow:hidden;
+}
+.desk{
+  position:absolute;
+  left:20px;right:20px;bottom:36px;
+  height:16px;
+  background:#c08457;
+  border:2px solid #7c4a2d;
+  border-radius:10px;
+}
+.phone{
+  position:absolute;
+  width:46px;height:76px;
+  border-radius:12px;
+  background:#f8fafc;
+  border:3px solid #1f2937;
+  right:24px;bottom:48px;
+}
+.notice{
+  position:absolute;
+  top:20px;right:18px;
+  background:#ffffffdd;
+  border:2px solid #1f2937;
+  border-radius:12px;
+  padding:6px 10px;
+  font-size:12px;
+  font-weight:800;
+}
+.veggie{
+  position:absolute;
+  bottom:38px;
+  width:112px;
+  height:150px;
+}
+.veggie .face{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:42px;
+  width:66px;height:56px;
+}
+.eye{
+  position:absolute;
+  top:14px;
+  width:10px;height:14px;
+  background:#1f2937;
+  border-radius:999px;
+}
+.eye.left{left:16px}
+.eye.right{right:16px}
+.mouth{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:8px;
+  width:28px;height:12px;
+  border-bottom:4px solid #1f2937;
+  border-radius:0 0 20px 20px;
+}
+.mouth.sad{
+  border-bottom:none;
+  border-top:4px solid #1f2937;
+  border-radius:20px 20px 0 0;
+  bottom:12px;
+}
+.blush{
+  position:absolute;
+  top:28px;
+  width:12px;height:8px;
+  background:#fca5a5;
+  border-radius:999px;
+  opacity:.65;
+}
+.blush.left{left:6px}
+.blush.right{right:6px}
+.arm{
+  position:absolute;
+  width:18px;height:58px;
+  background:#22c55e;
+  border:3px solid #166534;
+  border-radius:20px;
+  top:68px;
+}
+.arm.left{left:-8px;transform:rotate(18deg)}
+.arm.right{right:-8px;transform:rotate(-18deg)}
+.leg{
+  position:absolute;
+  width:18px;height:44px;
+  background:#f59e0b;
+  border:3px solid #92400e;
+  border-radius:20px;
+  bottom:-8px;
+}
+.leg.left{left:28px}
+.leg.right{right:28px}
+.carrot{
+  left:18px;
+}
+.carrot .body{
+  position:absolute;left:50%;transform:translateX(-50%);
+  top:20px;width:78px;height:104px;
+  background:linear-gradient(180deg,#fdba74,#f97316);
+  clip-path:polygon(18% 0%,82% 0%,100% 84%,50% 100%,0% 84%);
+  border:3px solid #9a3412;
+}
+.carrot .leaf{
+  position:absolute;left:50%;transform:translateX(-50%);
+  top:0;width:60px;height:36px;
+}
+.carrot .leaf:before,.carrot .leaf:after,.carrot .leaf i{
+  content:"";position:absolute;bottom:0;width:18px;height:28px;background:#22c55e;border:3px solid #166534;border-radius:16px 16px 0 0;
+}
+.carrot .leaf:before{left:4px}
+.carrot .leaf:after{right:4px}
+.carrot .leaf i{left:50%;transform:translateX(-50%)}
+.broccoli{
+  right:14px;
+}
+.broccoli .stalk{
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:24px;width:52px;height:78px;
+  background:#86efac;border:3px solid #166534;border-radius:18px;
+}
+.broccoli .crown{
+  position:absolute;left:50%;transform:translateX(-50%);
+  top:8px;width:92px;height:72px;
+}
+.broccoli .crown span{
+  position:absolute;background:#22c55e;border:3px solid #166534;border-radius:999px;
+}
+.broccoli .crown .a{left:0;top:18px;width:42px;height:42px}
+.broccoli .crown .b{left:24px;top:0;width:44px;height:44px}
+.broccoli .crown .c{right:0;top:18px;width:42px;height:42px}
+.broccoli .crown .d{left:16px;top:26px;width:56px;height:36px}
+.cabbage{
+  left:50%;
+  transform:translateX(-50%);
+}
+.cabbage .body{
+  position:absolute;left:50%;transform:translateX(-50%);
+  top:26px;width:90px;height:92px;border-radius:46px;
+  background:#bbf7d0;border:3px solid #166534;
+}
+.cabbage .body:before,.cabbage .body:after{
+  content:"";position:absolute;border:2px solid #16a34a;border-radius:40px;
+}
+.cabbage .body:before{inset:10px 16px 14px 16px}
+.cabbage .body:after{inset:16px 10px 10px 10px}
+.speech{
+  background:white;
+  border:3px solid #1f2937;
+  border-radius:20px;
+  padding:14px 14px;
+  min-height:116px;
+  font-size:clamp(17px,1.8vw,23px);
+  line-height:1.5;
+  position:relative;
+}
+.speech:before{
+  content:"";
+  position:absolute;
+  top:-14px;left:24px;
+  width:20px;height:20px;
+  background:white;
+  border-left:3px solid #1f2937;
+  border-top:3px solid #1f2937;
+  transform:rotate(45deg);
+}
+.quiz-box{
+  background:linear-gradient(180deg,#f8fbff,#eef5ff);
+  border:1px solid #d6e4ff;
+  border-radius:20px;
+  padding:20px;
+}
+.quiz-buttons{display:grid;gap:10px;margin-top:16px}
+.quiz-buttons button{
+  text-align:left;
+  background:white;
+  color:#1f2937;
+  border:1px solid #d3def7;
+}
+.feedback{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-weight:800}
+.feedback.ok{display:block;background:#dcfce7;border:1px solid #86efac;color:#166534}
+.feedback.bad{display:block;background:#fee2e2;border:1px solid #fca5a5;color:#991b1b}
+.notes{
+  margin-top:14px;
+  background:linear-gradient(180deg,#f9fbff,#f4f7ff);
+  border:1px dashed #c8d8fb;
+  border-radius:18px;
+  padding:16px;
+}
+.notes h4{margin:0 0 10px;color:#173b8f}
+.nav{
+  margin-top:16px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.nav-left,.nav-right{display:flex;gap:10px;flex-wrap:wrap}
+.small{font-size:14px;color:var(--sub)}
+footer{text-align:center;color:#64748b;padding:6px 20px 26px}
+@media print{
+  body{background:white}
+  header,.controls-panel,.nav,footer,.small,.topbar .meta:last-child,.notes-panel{display:none !important}
+  .container{max-width:none;padding:0}
+  .panel{border:none;box-shadow:none;padding:0}
+  .slide{page-break-after:always;min-height:auto;border:none;box-shadow:none;border-radius:0}
+}
+@media (max-width:980px){
+  .controls,.layout,.two,.comic{grid-template-columns:1fr}
+  .slide{padding:22px;min-height:500px}
+  .panel-cut{min-height:unset}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🥕 AI 사회 수업 PPT 생성 플랫폼</h1>
+  <p>인권 침해 · 인권 구제 · 채소 얼굴 만화 주인공 버전</p>
+</header>
+
+<div class="container">
+  <div class="panel controls-panel">
+    <div class="controls">
+      <div>
+        <label for="unit">단원 선택</label>
+        <select id="unit"></select>
+      </div>
+      <div>
+        <label for="teacher">교사명 / 수업명</label>
+        <input id="teacher" type="text" placeholder="예: 3학년 사회 / 윤연경" />
+      </div>
+      <div>
+        <label for="mode">수업 모드</label>
+        <select id="mode">
+          <option>기본</option>
+          <option>발표 강화</option>
+          <option>토론 강화</option>
+          <option>공개수업형</option>
+        </select>
+      </div>
+      <div>
+        <button class="primary" onclick="generateSlides()">채소 만화 PPT 생성</button>
+      </div>
+    </div>
+    <p class="helper">인권 단원을 <strong>인권 침해</strong>와 <strong>인권 구제</strong>로 나누고, 주인공은 얼굴이 있는 채소 캐릭터로 바꾸었습니다.</p>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <div class="topbar">
+        <div class="meta">
+          <span class="badge" id="unitBadge">단원: -</span>
+          <span class="badge" id="slideBadge">슬라이드 0 / 0</span>
+        </div>
+        <div class="meta">
+          <button class="secondary" onclick="showAllForPrint()">전체 보기</button>
+          <button class="ghost" onclick="window.print()">PDF 저장</button>
+        </div>
+      </div>
+
+      <div class="progress-bar"><div class="progress" id="progress"></div></div>
+
+      <div class="slide-stage" id="slideStage">
+        <div class="slide">
+          <span class="kicker">시작 화면</span>
+          <h2>채소 친구들과 함께 배우는 인권 수업</h2>
+          <p class="lead">단원을 고르고 <strong>채소 만화 PPT 생성</strong>을 누르면, 발표형 PPT와 만화형 슬라이드가 함께 만들어집니다.</p>
+          <div class="two">
+            <div class="card">
+              <h4>이번 버전 특징</h4>
+              <p>인권 침해와 인권 구제를 따로 배울 수 있고, 뉴스 사례와 토론 질문이 각각 연결됩니다.</p>
+            </div>
+            <div class="card">
+              <h4>만화 주인공</h4>
+              <p>당근이, 브로콜리, 양배추가 표정과 말풍선으로 상황을 설명합니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <div class="nav-left">
+          <button class="ghost" id="prevBtn" onclick="prevSlide()" disabled>◀ 이전</button>
+          <button class="ghost" id="nextBtn" onclick="nextSlide()" disabled>다음 ▶</button>
+        </div>
+        <div class="nav-right">
+          <button class="secondary" onclick="goSection('intro')">도입</button>
+          <button class="secondary" onclick="goSection('concept')">개념</button>
+          <button class="secondary" onclick="goSection('news')">뉴스</button>
+          <button class="secondary" onclick="goSection('comic')">만화</button>
+          <button class="secondary" onclick="goSection('discussion')">토론</button>
+          <button class="secondary" onclick="goSection('quiz')">퀴즈</button>
+          <button class="secondary" onclick="goSection('wrap')">정리</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel notes-panel">
+      <h3 style="margin-top:0;">교사용 운영 메모</h3>
+      <div class="notes" id="teacherNotes">
+        <h4>안내</h4>
+        <p>단원을 생성하면 이곳에 수업 흐름과 발문이 자동으로 표시됩니다.</p>
+      </div>
+      <p class="small">← → 방향키로 넘기기 가능</p>
+    </div>
+  </div>
+</div>
+
+<footer>HTML 파일 하나로 실행되는 채소 만화판</footer>
+
+<script>
+const lessons = {
+  "인권 침해":{
+    concept:[
+      "인권 침해는 인간의 존엄성과 권리를 해치는 모든 행위를 뜻한다.",
+      "학교폭력, 차별, 모욕, 개인정보 유출, 온라인 괴롭힘도 인권 침해가 될 수 있다.",
+      "가해자는 장난이라고 생각해도 피해자에게는 실제 상처와 두려움이 남을 수 있다."
+    ],
+    caseTitle:"채소반 단체 채팅방의 조롱 이미지 확산",
+    caseDetail:"채소반 친구들이 당근이의 사진을 몰래 편집해 단체 채팅방에 올리고, 웃긴다며 퍼 나르는 일이 생겼다고 가정해 보자. 올린 친구는 장난이라고 생각했지만, 당근이는 놀림거리가 되었다는 생각에 수업 시간에도 불안해지고 쉬는 시간에도 친구들을 피하게 된다. 온라인 공간은 빠르게 퍼지고 기록이 남기 때문에 피해가 더 오래 이어질 수 있다.",
+    newsWhy:"이 사례는 온라인에서 한 행동도 현실의 인권 침해가 될 수 있음을 보여 준다. 장난이라는 말로 책임이 사라지지 않으며, 피해자가 느끼는 두려움과 수치심을 함께 살펴보아야 한다.",
+    connection:"교과 연결: 인권 침해의 의미, 학교생활 속 사례, 피해자의 관점에서 문제를 이해하는 활동과 연결된다.",
+    comic:[
+      {scene:"chat", line:"브로콜리: 장난으로 만든 사진인데 그냥 웃고 넘기면 안 돼?"},
+      {scene:"sad", line:"당근이: 나는 계속 불안하고 창피해서 학교 오기도 싫어졌어…"},
+      {scene:"talk", line:"양배추: 사소한 장난도 상대를 다치게 하면 인권 침해가 될 수 있어."}
+    ],
+    discussion:[
+      "온라인 장난과 인권 침해의 경계는 어디일까?",
+      "피해자의 입장에서 이 상황을 보면 무엇이 가장 큰 문제일까?"
+    ],
+    quiz:{
+      q:"다음 중 인권 침해 사례로 가장 알맞은 것은 무엇일까요?",
+      choices:["친구 사진을 허락 없이 조롱하며 퍼뜨리기","교실 청소하기","도서관에서 책 빌리기","급식 메뉴 고르기"],
+      answer:"친구 사진을 허락 없이 조롱하며 퍼뜨리기"
+    },
+    notes:[
+      "도입에서 '장난이라고 말하면 정말 괜찮을까?'를 먼저 물어보면 좋습니다.",
+      "만화 뒤에는 피해자의 감정 변화를 학생들이 직접 말하게 해 보세요.",
+      "토론에서는 가해자 관점보다 피해자 관점에서 먼저 생각하게 하는 것이 좋습니다."
+    ]
+  },
+  "인권 구제":{
+    concept:[
+      "인권이 침해되었을 때는 혼자 참고 넘기지 않고 도움을 요청하는 것이 중요하다.",
+      "학교 안에서는 담임교사, 상담교사, 보호자, 학교전담기구 등에 도움을 요청할 수 있다.",
+      "학교 밖에서는 국가인권위원회 진정, 법적 절차, 상담 기관 등을 통해 구제를 받을 수 있다."
+    ],
+    caseTitle:"당근이의 도움 요청과 인권 구제 과정",
+    caseDetail:"조롱 이미지가 퍼진 뒤 당근이는 혼자 참다가 점점 학교생활이 힘들어졌다고 가정해 보자. 양배추의 도움으로 당근이는 담임교사와 보호자에게 상황을 알리고, 채팅방 캡처 화면 같은 증거를 정리해 학교에 도움을 요청한다. 이후 상담을 받고, 필요한 경우 학교 차원의 조치와 외부 기관의 도움까지 연결할 수 있다.",
+    newsWhy:"이 사례는 인권 침해를 해결할 때 가장 중요한 것이 빠른 도움 요청과 적절한 절차임을 보여 준다. 공식적인 구제 절차는 피해자를 보호하고 문제를 멈추게 하는 장치가 된다.",
+    connection:"교과 연결: 인권 구제의 의미, 학교 안팎의 도움 요청 경로, 국가인권위원회와 같은 구제 기관의 역할을 이해하는 활동과 연결된다.",
+    comic:[
+      {scene:"sad2", line:"당근이: 혼자 참았더니 더 힘들어졌어… 이제는 도움을 요청해야겠어."},
+      {scene:"help", line:"양배추: 담임선생님과 보호자에게 알리고 증거도 같이 모아 보자."},
+      {scene:"solve", line:"브로콜리: 학교와 기관의 도움을 받으면 문제를 멈추고 회복을 시작할 수 있어."}
+    ],
+    discussion:[
+      "인권 침해를 당했을 때 가장 먼저 해야 할 일은 무엇일까?",
+      "학교 안과 밖에서 받을 수 있는 도움에는 어떤 것이 있을까?"
+    ],
+    quiz:{
+      q:"다음 중 인권 구제 방법으로 가장 알맞은 것은 무엇일까요?",
+      choices:["담임교사나 보호자에게 알리고 도움 요청하기","혼자 참고 아무에게도 말하지 않기","조롱 글을 더 퍼뜨리기","증거를 모두 지우기"],
+      answer:"담임교사나 보호자에게 알리고 도움 요청하기"
+    },
+    notes:[
+      "구제 절차는 도움 요청의 순서로 쉽게 설명해 주세요.",
+      "증거 남기기, 믿을 수 있는 어른에게 알리기, 공식 기관 도움 요청 흐름을 강조하면 좋습니다.",
+      "앞 차시의 인권 침해 내용과 연결하면 두 차시 수업으로 운영하기 좋습니다."
+    ]
+  }
+};
+
+const unitSelect = document.getElementById("unit");
+Object.keys(lessons).forEach(key=>{
+  const o=document.createElement("option");
+  o.value=key;
+  o.textContent=key;
+  unitSelect.appendChild(o);
+});
+
+let slideDeck = [];
+let currentSlide = 0;
+let currentUnit = "";
+
+function esc(text){
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+
+function sceneArt(type){
+  if(type === "chat"){
+    return `
+      <div class="scene">
+        <div class="notice">채소반 단톡방</div>
+        <div class="desk"></div>
+        <div class="phone"></div>
+        ${veggie("broccoli","happy","right")}
+        ${veggie("carrot","sad","left")}
+      </div>`;
+  }
+  if(type === "sad"){
+    return `
+      <div class="scene">
+        <div class="notice">쉬는 시간</div>
+        ${veggie("carrot","sad","center")}
+      </div>`;
+  }
+  if(type === "talk"){
+    return `
+      <div class="scene">
+        <div class="desk"></div>
+        ${veggie("cabbage","normal","left")}
+        ${veggie("broccoli","normal","right")}
+      </div>`;
+  }
+  if(type === "sad2"){
+    return `
+      <div class="scene">
+        <div class="notice">집에 돌아온 뒤</div>
+        ${veggie("carrot","sad","center")}
+      </div>`;
+  }
+  if(type === "help"){
+    return `
+      <div class="scene">
+        <div class="desk"></div>
+        ${veggie("cabbage","happy","left")}
+        ${veggie("carrot","normal","right")}
+      </div>`;
+  }
+  if(type === "solve"){
+    return `
+      <div class="scene">
+        <div class="notice">도움 요청 완료</div>
+        ${veggie("broccoli","happy","left")}
+        ${veggie("carrot","happy","center")}
+        ${veggie("cabbage","happy","right")}
+      </div>`;
+  }
+  return `
+    <div class="scene">
+      ${veggie("carrot","normal","left")}
+      ${veggie("broccoli","normal","right")}
+    </div>`;
+}
+
+function veggie(kind, mood, pos){
+  const cls = pos === "center" ? "left:50%;transform:translateX(-50%);" :
+              pos === "right" ? "right:18px;" : "left:18px;";
+  let faceMouth = mood === "sad" ? '<div class="mouth sad"></div>' : '<div class="mouth"></div>';
+  if(kind === "carrot"){
+    return `
+      <div class="veggie carrot" style="${cls}">
+        <div class="leaf"><i></i></div>
+        <div class="body"></div>
+        <div class="face">
+          <div class="eye left"></div><div class="eye right"></div>
+          <div class="blush left"></div><div class="blush right"></div>
+          ${faceMouth}
+        </div>
+        <div class="arm left"></div><div class="arm right"></div>
+        <div class="leg left"></div><div class="leg right"></div>
+      </div>`;
+  }
+  if(kind === "broccoli"){
+    return `
+      <div class="veggie broccoli" style="${cls}">
+        <div class="crown"><span class="a"></span><span class="b"></span><span class="c"></span><span class="d"></span></div>
+        <div class="stalk"></div>
+        <div class="face" style="top:54px;">
+          <div class="eye left"></div><div class="eye right"></div>
+          <div class="blush left"></div><div class="blush right"></div>
+          ${faceMouth}
+        </div>
+        <div class="arm left"></div><div class="arm right"></div>
+        <div class="leg left"></div><div class="leg right"></div>
+      </div>`;
+  }
+  return `
+    <div class="veggie cabbage" style="${cls}">
+      <div class="body"></div>
+      <div class="face" style="top:44px;">
+        <div class="eye left"></div><div class="eye right"></div>
+        <div class="blush left"></div><div class="blush right"></div>
+        ${faceMouth}
+      </div>
+      <div class="arm left"></div><div class="arm right"></div>
+      <div class="leg left"></div><div class="leg right"></div>
+    </div>`;
+}
+
+function buildDeck(unit, mode){
+  const d = lessons[unit];
+  const teacher = document.getElementById("teacher").value.trim() || "사회 수업";
+  const modeText = {
+    "기본":"핵심 내용 이해와 사례 적용에 초점을 둡니다.",
+    "발표 강화":"모둠별 발표와 근거 제시에 초점을 둡니다.",
+    "토론 강화":"의견 비교와 이유 말하기에 초점을 둡니다.",
+    "공개수업형":"도입-탐구-공유-정리 흐름이 잘 보이도록 구성합니다."
+  }[mode];
+
+  const deck = [];
+
+  deck.push({
+    section:"intro",
+    html:`
+      <span class="kicker">도입</span>
+      <h2>${unit}</h2>
+      <p class="lead"><strong>${teacher}</strong> 수업용 자료입니다. ${modeText}</p>
+      <div class="two">
+        <div class="card"><h4>오늘의 질문</h4><p>${d.discussion[0]}</p></div>
+        <div class="card"><h4>만화 주인공</h4><p>당근이, 브로콜리, 양배추가 상황을 보여 주며 이야기합니다.</p></div>
+      </div>`
+  });
+
+  deck.push({
+    section:"intro",
+    html:`
+      <span class="kicker">수업 목표</span>
+      <h3>오늘 무엇을 배우나요?</h3>
+      <ul>
+        <li>${d.concept[0]}</li>
+        <li>${d.concept[1]}</li>
+        <li>사례를 보고 교과 개념과 연결해 설명할 수 있다.</li>
+      </ul>`
+  });
+
+  for(let i=0;i<4;i++){
+    deck.push({
+      section:"concept",
+      html:`
+        <span class="kicker">핵심 개념</span>
+        <h3>개념 이해 ${i+1}</h3>
+        <div class="card"><p>${d.concept[i % d.concept.length]}</p></div>
+        <div class="highlight" style="margin-top:16px;">
+          <p><strong>교사 발문</strong> · 채소 친구들의 이야기와 연결하면 이 개념이 어떤 뜻인지 더 잘 보일까요?</p>
+        </div>`
+    });
+  }
+
+  for(let i=0;i<5;i++){
+    deck.push({
+      section:"news",
+      html:`
+        <span class="kicker">뉴스 · 사례 연결</span>
+        <h3>${d.caseTitle}</h3>
+        <div class="newsbox">
+          <div class="newshead">
+            <h4>사례 설명</h4>
+            <p>${d.caseDetail}</p>
+          </div>
+          <div class="two">
+            <div class="connection">
+              <h4 style="margin:0 0 8px;">왜 중요한가?</h4>
+              <p>${d.newsWhy}</p>
+            </div>
+            <div class="card">
+              <h4>교과 연결</h4>
+              <p>${d.connection}</p>
+            </div>
+          </div>
+        </div>`
+    });
+  }
+
+  for(let i=0;i<5;i++){
+    deck.push({
+      section:"comic",
+      html:`
+        <span class="kicker">채소 만화</span>
+        <div class="comic-header">
+          <h3 style="margin:0;">채소 친구들 이야기 ${i+1}</h3>
+          <span class="tag">주인공: 당근이 · 브로콜리 · 양배추</span>
+        </div>
+        <div class="comic">
+          ${d.comic.map((c, idx)=>`
+            <div class="panel-cut">
+              <div class="panel-label">${idx+1}컷</div>
+              ${sceneArt(c.scene)}
+              <div class="speech">${c.line}</div>
+            </div>
+          `).join("")}
+        </div>`
+    });
+  }
+
+  for(let i=0;i<5;i++){
+    deck.push({
+      section:"discussion",
+      html:`
+        <span class="kicker">토론</span>
+        <h3>생각 나누기 ${i+1}</h3>
+        <div class="two">
+          <div class="card"><h4>질문 1</h4><p>${d.discussion[0]}</p></div>
+          <div class="card"><h4>질문 2</h4><p>${d.discussion[1]}</p></div>
+        </div>
+        <div class="highlight" style="margin-top:16px;">
+          <p><strong>발표 팁</strong> · 내 생각 1문장 + 이유 2가지 + 채소 친구에게 해 주고 싶은 말 1문장으로 정리해 보세요.</p>
+        </div>`
+    });
+  }
+
+  for(let i=0;i<5;i++){
+    deck.push({
+      section:"quiz",
+      html:`
+        <span class="kicker">확인 퀴즈</span>
+        <h3>학습 점검 ${i+1}</h3>
+        <div class="quiz-box">
+          <p><strong>${d.quiz.q}</strong></p>
+          <div class="quiz-buttons">
+            ${d.quiz.choices.map(choice => `
+              <button onclick="checkAnswer(this, '${esc(choice)}', '${esc(d.quiz.answer)}')">${choice}</button>
+            `).join("")}
+          </div>
+          <div class="feedback" id="feedbackBox"></div>
+        </div>`
+    });
+  }
+
+  while(deck.length < 30){
+    deck.push({
+      section:"wrap",
+      html:`
+        <span class="kicker">정리</span>
+        <h3>한 번 더 정리하기</h3>
+        <div class="two">
+          <div class="card"><h4>오늘의 핵심</h4><p>${d.connection}</p></div>
+          <div class="card"><h4>실천 다짐</h4><p>채소 친구들에게 내가 해 주고 싶은 도움의 말을 한 문장으로 적어 보세요.</p></div>
+        </div>`
+    });
+  }
+
+  return deck.slice(0,30);
+}
+
+function generateSlides(){
+  currentUnit = unitSelect.value;
+  const mode = document.getElementById("mode").value;
+  slideDeck = buildDeck(currentUnit, mode);
+  currentSlide = 0;
+  renderSlide();
+  renderNotes();
+}
+
+function renderSlide(){
+  const stage = document.getElementById("slideStage");
+  const total = slideDeck.length;
+  stage.innerHTML = `<div class="slide">${slideDeck[currentSlide].html}</div>`;
+  document.getElementById("unitBadge").textContent = `단원: ${currentUnit}`;
+  document.getElementById("slideBadge").textContent = `슬라이드 ${currentSlide+1} / ${total}`;
+  document.getElementById("progress").style.width = `${((currentSlide+1)/total)*100}%`;
+  document.getElementById("prevBtn").disabled = currentSlide === 0;
+  document.getElementById("nextBtn").disabled = currentSlide === total - 1;
+}
+
+function renderNotes(){
+  const d = lessons[currentUnit];
+  document.getElementById("teacherNotes").innerHTML = `
+    <h4>${currentUnit} 운영 포인트</h4>
+    <ul>${d.notes.map(n=>`<li>${n}</li>`).join("")}</ul>
+    <p><strong>추천 흐름</strong> · 만화 보기 → 사례 읽기 → 무엇이 문제인지 찾기 → 교과 개념 붙이기 → 토론 → 정리</p>`;
+}
+
+function prevSlide(){ if(currentSlide > 0){ currentSlide--; renderSlide(); } }
+function nextSlide(){ if(currentSlide < slideDeck.length - 1){ currentSlide++; renderSlide(); } }
+
+function goSection(name){
+  if(!slideDeck.length) return;
+  const idx = slideDeck.findIndex(s => s.section === name);
+  if(idx !== -1){
+    currentSlide = idx;
+    renderSlide();
+  }
+}
+
+function checkAnswer(btn, choice, answer){
+  const box = btn.closest(".quiz-box").querySelector("#feedbackBox");
+  if(choice === answer){
+    box.className = "feedback ok";
+    box.textContent = `정답입니다! 정답: ${answer}`;
+  }else{
+    box.className = "feedback bad";
+    box.textContent = `다시 생각해 보세요. 정답은 ${answer}입니다.`;
+  }
+}
+
+function showAllForPrint(){
+  if(!slideDeck.length) return;
+  const stage = document.getElementById("slideStage");
+  stage.innerHTML = slideDeck.map(s => `<div class="slide" style="margin-bottom:18px;">${s.html}</div>`).join("");
+  document.getElementById("slideBadge").textContent = `전체 보기 (${slideDeck.length}장)`;
+  document.getElementById("progress").style.width = "100%";
+  document.getElementById("prevBtn").disabled = true;
+  document.getElementById("nextBtn").disabled = true;
+}
+
+document.addEventListener("keydown", e=>{
+  if(e.key === "ArrowRight") nextSlide();
+  if(e.key === "ArrowLeft") prevSlide();
+});
+</script>
+</body>
+</html>
